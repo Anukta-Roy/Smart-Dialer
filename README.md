@@ -31,7 +31,6 @@ The project implements progressive dialing, predictive pacing, safety controls, 
 ## Progressive Dialing
 
 The progressive dialing mechanism ensures that calls are allocated only when resources are available.
-
 The system:
 
 - finds available agents;
@@ -54,7 +53,6 @@ The predictive pacing engine determines how many additional calls may be request
 - recent campaign outcomes.
 
 The predictive algorithm only produces a requested number of calls.
-
 It does not directly initiate calls.
 
 ---
@@ -62,7 +60,6 @@ It does not directly initiate calls.
 ## Safety Controller
 
 The Safety Controller is a mandatory safety boundary between predictive pacing and call allocation.
-
 It can:
 
 - approve a dialing request;
@@ -85,11 +82,8 @@ The `AnswerRateEstimator` combines:
 2. recent campaign outcomes.
 
 Recent outcomes are maintained using a rolling window.
-
 The predicted answer rate is calculated using weighted historical and recent behavior.
-
 This allows the pacing system to react when campaign conditions change.
-
 For example:
 
 ```text
@@ -293,11 +287,8 @@ pip install -r requirements.txt
 # Database Configuration
 
 The application uses PostgreSQL.
-
 Database configuration is loaded from environment variables using `python-dotenv`.
-
 The project includes an `.env.example` file.
-
 Copy it to `.env`.
 
 ### Windows
@@ -530,7 +521,6 @@ Controlled Progressive Dialer
 ```
 
 This architecture ensures that predictive logic cannot directly bypass deterministic safety checks.
-
 The Safety Controller can reduce or reject a predictive request based on:
 
 - available agent capacity;
@@ -735,7 +725,6 @@ Predictive Pacing
 ```
 
 This allows the dialer to react when recent campaign behavior changes.
-
 For example, if answer rates suddenly decrease, the predicted answer rate changes and pacing decisions adapt.
 
 ---
@@ -743,9 +732,7 @@ For example, if answer rates suddenly decrease, the predicted answer rate change
 # Simulation
 
 The project includes a basic simulation layer.
-
 The simulator evaluates different dialing conditions.
-
 Examples include:
 
 ```text
@@ -770,7 +757,6 @@ The simulation demonstrates how predictive pacing and safety decisions change as
 # Campaign Simulation
 
 The campaign simulator evaluates dialing behavior across campaign conditions.
-
 The simulation verifies important safety properties, including:
 
 ```text
@@ -784,7 +770,6 @@ Simulation results are reproducible.
 # Load Testing
 
 The project includes a basic load test for predictive dialing.
-
 The test evaluates scenarios with increasing numbers of available agents:
 
 ```text
@@ -794,7 +779,6 @@ The test evaluates scenarios with increasing numbers of available agents:
 ```
 
 The load test checks that the predictive and safety pipeline continues to enforce safety constraints.
-
 The prototype focuses on the correctness and efficiency of decision logic rather than placing thousands of real telecom calls.
 
 ---
@@ -868,7 +852,6 @@ pytest tests/test_load.py -v
 # Architecture Decisions
 
 ## Why PostgreSQL?
-
 PostgreSQL is used as the persistent source of truth for:
 
 - agent state;
@@ -883,9 +866,7 @@ For this prototype, a relational database provides a simple way to model resourc
 ## Why Not Let Predictive Logic Directly Dial?
 
 Predictive models can be wrong.
-
 A sudden change in answer rate, provider behavior, or agent availability could make a previously reasonable prediction unsafe.
-
 Therefore:
 
 ```text
@@ -901,9 +882,7 @@ The Safety Controller determines whether those calls are actually allowed.
 ## Why Use a Separate Safety Controller?
 
 Separating prediction from deterministic safety creates a clear architectural boundary.
-
 The predictive component can optimize utilization, while the safety layer enforces hard constraints.
-
 This allows the system to benefit from predictive behavior without allowing prediction errors to directly create unsafe dialing.
 
 ---
@@ -911,9 +890,7 @@ This allows the system to benefit from predictive behavior without allowing pred
 ## Why Use Provider Abstraction?
 
 The provider abstraction separates telecom behavior from dialing logic.
-
 The dialer does not depend on provider-specific details.
-
 Different providers can:
 
 - fail differently;
@@ -927,9 +904,7 @@ The core system remains independent of those implementation details.
 ## Why Reuse the Same Call Record During Retry?
 
 Retries can cause duplicate provider calls if each retry creates a new call record.
-
 The recovery service performs an idempotency check before initiating a provider call.
-
 If the call already contains a provider call ID, it is reused instead of initiating another provider call.
 
 ---
