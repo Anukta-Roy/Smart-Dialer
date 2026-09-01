@@ -962,7 +962,7 @@ The prototype intentionally keeps the architecture relatively simple to prioriti
 
 ---
 
-# Final Design Principle
+# Final Design Answer (Final Question)
 
 The central design principle of SmartDialer is:
 
@@ -972,9 +972,7 @@ but enforce safety deterministically.
 ```
 
 Predictive pacing improves potential agent utilization by estimating how many calls may be needed.
-
 However, the Safety Controller remains the final authority before calls are allocated.
-
 The resulting architecture aims to retain as much utilization benefit as possible from predictive dialing while preserving the deterministic safety properties of progressive dialing.
 
 ```text
